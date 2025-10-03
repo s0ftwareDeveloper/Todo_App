@@ -1,5 +1,6 @@
 package com.pdi_technologies.CRUD_presentation.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +45,59 @@ public class TodoService {
 
     public List<Todo> getTodosByTitle(String title) {
         return todoRepository.findByTitleContaining(title);
+    }
+
+    // Priority-based methods
+    public List<Todo> getTodosByPriority(Todo.Priority priority) {
+        return todoRepository.findByPriority(priority);
+    }
+
+    public List<Todo> getTodosByPriorityAndCompleted(Todo.Priority priority, boolean completed) {
+        return todoRepository.findByPriorityAndCompleted(priority, completed);
+    }
+
+    // Due date methods
+    public List<Todo> getTodosByDueDate(LocalDate dueDate) {
+        return todoRepository.findByDueDate(dueDate);
+    }
+
+    public List<Todo> getTodosDueBefore(LocalDate date) {
+        return todoRepository.findByDueDateBefore(date);
+    }
+
+    public List<Todo> getTodosDueAfter(LocalDate date) {
+        return todoRepository.findByDueDateAfter(date);
+    }
+
+    public List<Todo> getTodosByDateRange(LocalDate startDate, LocalDate endDate) {
+        return todoRepository.findTodosByDateRange(startDate, endDate);
+    }
+
+    public List<Todo> getOverdueTodos() {
+        return todoRepository.findOverdueTodos(LocalDate.now());
+    }
+
+    // Combined filtering methods
+    public List<Todo> getTodosByPriorityAndDueDate(Todo.Priority priority, LocalDate dueDate) {
+        return todoRepository.findByPriority(priority).stream()
+                .filter(todo -> todo.getDueDate() != null && todo.getDueDate().equals(dueDate))
+                .toList();
+    }
+
+    public List<Todo> getTodosSortedByPriorityAndDueDate() {
+        return todoRepository.findAll().stream()
+                .sorted((t1, t2) -> {
+                    // First sort by priority (URGENT > HIGH > MEDIUM > LOW)
+                    int priorityComparison = t2.getPriority().ordinal() - t1.getPriority().ordinal();
+                    if (priorityComparison != 0) return priorityComparison;
+                    
+                    // Then sort by due date (earliest first)
+                    if (t1.getDueDate() == null && t2.getDueDate() == null) return 0;
+                    if (t1.getDueDate() == null) return 1;
+                    if (t2.getDueDate() == null) return -1;
+                    return t1.getDueDate().compareTo(t2.getDueDate());
+                })
+                .toList();
     }
 
 }
