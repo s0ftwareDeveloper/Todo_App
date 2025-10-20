@@ -84,20 +84,5 @@ public class TodoService {
                 .toList();
     }
 
-    public List<Todo> getTodosSortedByPriorityAndDueDate() {
-        return todoRepository.findAll().stream()
-                .sorted((t1, t2) -> {
-                    // First sort by priority (URGENT > HIGH > MEDIUM > LOW)
-                    int priorityComparison = t2.getPriority().ordinal() - t1.getPriority().ordinal();
-                    if (priorityComparison != 0) return priorityComparison;
-                    
-                    // Then sort by due date (earliest first)
-                    if (t1.getDueDate() == null && t2.getDueDate() == null) return 0;
-                    if (t1.getDueDate() == null) return 1;
-                    if (t2.getDueDate() == null) return -1;
-                    return t1.getDueDate().compareTo(t2.getDueDate());
-                })
-                .toList();
-    }
 
 }

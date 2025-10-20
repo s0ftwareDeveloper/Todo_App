@@ -132,8 +132,4 @@ public class TodoController {
         return ResponseEntity.ok(todoService.getTodosByPriorityAndDueDate(priority, dueDate));
     }
 
-    @GetMapping("/sorted")
-    public ResponseEntity<List<Todo>> getTodosSortedByPriorityAndDueDate() {
-        return ResponseEntity.ok(todoService.getTodosSortedByPriorityAndDueDate());
-    }
 }

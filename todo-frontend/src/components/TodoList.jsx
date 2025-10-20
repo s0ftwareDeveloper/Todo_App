@@ -9,7 +9,7 @@ const TodoList = ({ refreshTrigger, onEditTodo }) => {
   const [filterStatus, setFilterStatus] = useState('all');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [sortBy, setSortBy] = useState('createdAt');
+  const [sortBy, setSortBy] = useState('priority');
   const [sortOrder, setSortOrder] = useState('desc');
 
   // Load todos when refreshTrigger changes
@@ -45,7 +45,7 @@ const TodoList = ({ refreshTrigger, onEditTodo }) => {
 
     // filters the todos by the priority
     if (filterPriority !== 'all') {
-      filtered = filtered.filter(todo => todo.priority.toLowerCase() === filterPriority);
+      filtered = filtered.filter(todo => todo.priority.toLowerCase() === filterPriority.toLowerCase());
     }
 
     // filters the todos by the status
@@ -59,13 +59,8 @@ const TodoList = ({ refreshTrigger, onEditTodo }) => {
       let aValue, bValue;
       
       switch (sortBy) {
-        case 'title': {
-          aValue = a.title.toLowerCase();
-          bValue = b.title.toLowerCase();
-          break;
-        }
         case 'priority': {
-          const priorityOrder = { urgent: 4, high: 3, medium: 2, low: 1 };
+          const priorityOrder = { URGENT: 4, HIGH: 3, MEDIUM: 2, LOW: 1 };
           aValue = priorityOrder[a.priority] || 0;
           bValue = priorityOrder[b.priority] || 0;
           break;
@@ -75,10 +70,10 @@ const TodoList = ({ refreshTrigger, onEditTodo }) => {
           bValue = new Date(b.dueDate || '9999-12-31');
           break;
         }
-        case 'createdAt':
         default: {
-          aValue = new Date(a.createdAt || a.id);
-          bValue = new Date(b.createdAt || b.id);
+          const priorityOrder = { URGENT: 4, HIGH: 3, MEDIUM: 2, LOW: 1 };
+          aValue = priorityOrder[a.priority] || 0;
+          bValue = priorityOrder[b.priority] || 0;
           break;
         }
       }
@@ -242,10 +237,6 @@ const TodoList = ({ refreshTrigger, onEditTodo }) => {
                 setSortOrder(order);
               }}
             >
-              <option value="createdAt-desc">Newest First</option>
-              <option value="createdAt-asc">Oldest First</option>
-              <option value="title-asc">Title A-Z</option>
-              <option value="title-desc">Title Z-A</option>
               <option value="priority-desc">Priority High-Low</option>
               <option value="priority-asc">Priority Low-High</option>
               <option value="dueDate-asc">Due Date Soon</option>
