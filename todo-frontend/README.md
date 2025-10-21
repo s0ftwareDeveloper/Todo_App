@@ -16,7 +16,6 @@ A modern, responsive todo management application built with React and Bootstrap,
 - Filter by Status (All, Pending, Completed)
 - Various Sorting options:
   - Newest/Oldest first
-  - Title A-Z/Z-A
   - Priority High-Low/Low-High
   - Due Date Soon/Later
 
